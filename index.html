@@ -3,19 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TerraFund - AnnonzPlus</title>
+  <title>TerraFund - Connexion</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #ffc107;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #000;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #e0a800;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Contenu visible de la page -->
-  <h1>Bienvenue sur TerraFund</h1>
-
-  <div>
-    <h2>Créer un compte / Se connecter</h2>
-    <input type="email" id="email" placeholder="Email"><br>
-    <input type="password" id="password" placeholder="Mot de passe"><br>
+  <div class="container">
+    <h2>Bienvenue sur TerraFund</h2>
+    <input type="email" id="email" placeholder="Adresse email">
+    <input type="password" id="password" placeholder="Mot de passe">
     <button onclick="signup()">Créer un compte</button>
-    <button onclick="login()">Connexion</button>
+    <button onclick="login()">Se connecter</button>
   </div>
 
   <!-- Firebase SDK -->
@@ -23,7 +70,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
 
   <script>
-    // Config Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAvViJjco499G0cQfEyhY0m_mORSAmBH4M",
       authDomain: "annonzplus.firebaseapp.com",
@@ -33,17 +79,15 @@
       appId: "1:573875821045:web:61195685aef44f180ee8bc"
     };
 
-    // Init Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Inscription
     function signup() {
       const email = document.getElementById("email").value;
       const pass = document.getElementById("password").value;
 
       auth.createUserWithEmailAndPassword(email, pass)
-        .then((userCredential) => {
+        .then(() => {
           alert("Compte créé avec succès !");
         })
         .catch((error) => {
@@ -51,13 +95,12 @@
         });
     }
 
-    // Connexion
     function login() {
       const email = document.getElementById("email").value;
       const pass = document.getElementById("password").value;
 
       auth.signInWithEmailAndPassword(email, pass)
-        .then((userCredential) => {
+        .then(() => {
           alert("Connexion réussie !");
         })
         .catch((error) => {
