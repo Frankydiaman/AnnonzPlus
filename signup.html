@@ -2,17 +2,19 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Connexion - TerraFund</title>
+  <title>Inscription - TerraFund</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="background">
 
   <div class="container">
-    <h2>Connexion à TerraFund</h2>
+    <h2>Créer un compte TerraFund</h2>
+    <input type="text" id="firstname" placeholder="Prénom">
+    <input type="text" id="lastname" placeholder="Nom">
     <input type="email" id="email" placeholder="Email">
     <input type="password" id="password" placeholder="Mot de passe">
-    <button onclick="login()">Se connecter</button>
-    <p>Pas encore de compte ? <a href="signup.html">Inscrivez-vous</a></p>
+    <button onclick="signup()">S’inscrire</button>
+    <p>Déjà un compte ? <a href="index.html">Connectez-vous</a></p>
     <p id="error"></p>
   </div>
 
