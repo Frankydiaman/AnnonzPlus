@@ -3,127 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketplace - TerraFund</title>
+    <title>MegaMarket</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
         body {
-            background-color: #f2f2f2;
-            color: #333;
-            font-family: Arial, sans-serif;
-        }
-
-        header {
-            background-color: #1d3557;
-            padding: 10px 0;
-            color: white;
-            text-align: center;
-            font-size: 24px;
-        }
-
-        .marketplace-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
             padding: 20px;
+            margin: 0;
         }
-
-        .product-card {
-            background-color: white;
-            border: 1px solid #ddd;
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .auth-card, .offer-card, .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+        }
+        
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .product-item {
+            background: white;
             border-radius: 10px;
-            width: 250px;
-            margin: 10px;
             padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .product-card h3 {
-            color: #1d3557;
-            margin: 10px 0;
-        }
-
-        .product-card p {
-            color: #777;
-            font-size: 14px;
-            height: 50px;
-            overflow: hidden;
-        }
-
-        .product-card .price {
-            color: #e9c46a;
-            font-size: 18px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .product-card button {
-            background-color: #e9c46a;
-            border: none;
-            color: white;
-            padding: 10px;
-            width: 100%;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .product-card button:hover {
-            background-color: #1d3557;
-        }
-
-        .add-product-btn {
-            background-color: #e9c46a;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 20px;
-            display: block;
-            text-align: center;
-            width: 200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .add-product-btn:hover {
-            background-color: #1d3557;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
-    <header>
-        Marketplace
-    </header>
-    <div class="marketplace-container">
-        <!-- Example Product -->
-        <div class="product-card">
-            <img src="https://via.placeholder.com/250" alt="Product Image">
-            <h3>Nom du Produit</h3>
-            <p>Description du produit (court)</p>
-            <div class="price">Prix: 10 000 FCFA</div>
-            <button>Acheter</button>
+    <div class="container">
+        <!-- Écran de connexion -->
+        <div id="auth-screen" class="auth-card">
+            <h2 style="text-align: center; margin-bottom: 20px;">
+                <i class="fas fa-store"></i> MegaMarket
+            </h2>
+            <form id="loginForm">
+                <div>
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="votre@email.com" required>
+                </div>
+                <div>
+                    <label>Mot de passe</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 15px;">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+            </form>
         </div>
 
-        <!-- Add more product cards here -->
+        <!-- Interface après connexion -->
+        <div id="main-screen" class="hidden">
+            <div style="text-align: right; margin-bottom: 15px;">
+                <button id="logoutBtn" class="btn">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+            
+            <div class="btn-group">
+                <button id="btnOffers" class="btn active">
+                    <i class="fas fa-bullhorn"></i> Publier une offre
+                </button>
+                <button id="btnProducts" class="btn">
+                    <i class="fas fa-shopping-bag"></i> Marketplace
+                </button>
+            </div>
+            
+            <!-- Section Offres (masquée par défaut) -->
+            <div id="offers-section">
+                <div class="offer-card">
+                    <h3><i class="fas fa-plus-circle"></i> Nouvelle offre</h3>
+                    <form id="offerForm">
+                        <input type="text" id="offer-title" placeholder="Titre" required>
+                        <input type="number" id="offer-price" placeholder="Prix (FCFA)" required>
+                        <input type="text" id="offer-contact" placeholder="WhatsApp (ex: 221701234567)" required>
+                        <textarea id="offer-desc" placeholder="Description" rows="3" required></textarea>
+                        <button type="submit" class="btn" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i> Publier
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Section Produits (masquée par défaut) -->
+            <div id="products-section" class="hidden">
+                <div class="product-card">
+                    <h3><i class="fas fa-store-alt"></i> Marketplace</h3>
+                    <div id="products-list" class="product-grid">
+                        <!-- Les produits s'afficheront ici -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <!-- Add Product Button (visible only when logged in) -->
-    <button class="add-product-btn">Ajouter un produit</button>
 
-    <script>
-        // Placeholder JavaScript for future functionality
-        // This could dynamically load products from Firebase
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { 
+            getFirestore,
+            collection,
+            addDoc,
+            getDocs,
+            query,
+            orderBy
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCNBk3z90lMmJ-Xped7MGFTTiZSF3u1kMM",
+            authDomain: "megamarket-8f9e5.firebaseapp.com",
+            projectId: "megamarket-8f9e5",
+            storageBucket: "megamarket-8f9e5.appspot.com",
+            messagingSenderId: "147912633197",
+            appId: "1:147912633197:web:a21331716107770f328864"
+        };
+
+        // Initialisation
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Gestion de l'interface
+        function showAuthScreen() {
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('main-screen').classList.add('hidden');
+        }
+
+        function showMainScreen() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-screen').classList.remove('hidden');
+            showOffersSection(); // Afficher les offres par défaut
+        }
+
+        function showOffersSection() {
+            document.getElementById('offers-section').classList.remove('hidden');
+            document.getElementById('products-section').classList.add('hidden');
+            document.getElementById('btnOffers').classList.add('active');
+            document.getElementById('btnProducts').classList.remove('active');
+        }
+
+        function showProductsSection() {
+            document.getElementById('offers-section').classList.add('hidden');
+            document.getElementById('products-section').classList.remove('hidden');
+            document.getElementById('btnOffers').classList.remove('active');
+            document.getElementById('btnProducts').classList.add('active');
+            loadProducts();
+        }
+
+        // Gestion des offres
+        async function loadOffers() {
+            const q = query(collection(db, "offers"), orderBy("date", "desc"));
+            const querySnapshot = await getDocs(q);
+            
+            // (Cette fonction est appelée automatiquement après publication)
+        }
+
+        // Gestion des produits (Marketplace)
+        async function loadProducts() {
+            const productsList = document.getElementById('products-list');
+            productsList.innerHTML = '<p>Chargement en cours...</p>';
+            
+            const q = query(collection(db, "offers"), orderBy("date", "desc"));
+            const querySnapshot = await getDocs(q);
+            
+            productsList.innerHTML = '';
+            
+            if (querySnapshot.empty) {
+                productsList.innerHTML = '<p>Aucun produit disponible</p>';
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const product = doc.data();
+                productsList.innerHTML += `
+                    <div class="product-item">
+                        <h4>${product.title}</h4>
+                        <p><strong>${product.price} FCFA</strong></p>
+                        <p>${product.desc}</p>
+                        <a href="https://wa.me/${product.contact}" target="_blank" class="btn" style="display: inline-block;">
+                            <i class="fab fa-whatsapp"></i> Contacter
+                        </a>
+                    </div>
+                `;
+            });
+        }
+
+        // Événements
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                alert("Erreur: " + error.message);
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                alert("Erreur: " + error.message);
+            }
+        });
+
+        document.getElementById('offerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('offer-title').value;
+            const price = document.getElementById('offer-price').value;
+            const contact = document.getElementById('offer-contact').value;
+            const desc = document.getElementById('offer-desc').value;
+
+            try {
+                await addDoc(collection(db, "offers"), {
+                    title,
+                    price,
+                    contact,
+                    desc,
+                    date: new Date(),
+                    userId: auth.currentUser.uid
+                });
+                
+                document.getElementById('offerForm').reset();
+                alert("Offre publiée avec succès !");
+            } catch (error) {
+                alert("Erreur: " + error.message);
+            }
+        });
+
+        document.getElementById('btnOffers').addEventListener('click', showOffersSection);
+        document.getElementById('btnProducts').addEventListener('click', showProductsSection);
+
+        // Écouteur d'authentification
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                showMainScreen();
+            } else {
+                showAuthScreen();
+            }
+        });
     </script>
 </body>
 </html>

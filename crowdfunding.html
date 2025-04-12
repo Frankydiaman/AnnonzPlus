@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro-Crédit Solidaire</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Barre de Navigation (identique à index.html) -->
+    <nav>
+        <h1>🤝 MICRO CREDIT</h1>
+        <div>
+            <a href="index.html" class="nav-link">Marketplace</a>
+            <a href="crowdfunding.html" class="nav-link active">Crédit</a>
+            <button id="loginBtn">Connexion</button>
+        </div>
+    </nav>
+
+    <!-- Contenu Spécifique au Crowdfunding -->
+    <div class="container">
+        <div class="project-card">
+            <h2>Projet: Épicerie Solidaire</h2>
+            <p>💰 Montant recherché: 5 000 €</p>
+            <p>📅 Durée: 12 mois</p>
+            <div class="progress-bar">
+                <div class="progress" style="width: 45%;">45%</div>
+            </div>
+            <button id="investBtn">Investir 50 €</button>
+        </div>
+    </div>
+
+    <!-- Même JS que index.html -->
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // JS spécifique au crowdfunding
+        document.getElementById('investBtn').addEventListener('click', () => {
+            alert("Merci pour votre investissement !");
+            // Ici, intégrer Stripe ou enregistrement en BDD
+        });
+    </script>
+</body>
+</html>

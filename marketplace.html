@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MegaMarket - Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Reprend le même style que ton auth-container */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+        
+        .marketplace-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .offer-form, .offers-list {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="marketplace-container">
+        <div class="offer-form">
+            <h2>Publier une offre</h2>
+            <input type="text" id="titre" placeholder="Titre">
+            <input type="number" id="prix" placeholder="Prix (€)">
+            <button onclick="ajouterOffre()">Publier</button>
+        </div>
+        
+        <div class="offers-list" id="offres-list"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    
+    <script>
+    // Le même code JavaScript que dans l'Option 1
+    </script>
+</body>
+</html>
