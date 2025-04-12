@@ -1,34 +1,96 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Annonz+</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AnnonzPlus | Bienvenue</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f8fa;
+      color: #333;
+    }
+
+    header {
+      background-color: #1e1e2f;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    nav {
+      background-color: #28293d;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    section {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .cta {
+      margin-top: 20px;
+      display: inline-block;
+      background: #0b74de;
+      color: #fff;
+      padding: 12px 25px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .cta:hover {
+      background: #095bb2;
+    }
+
+    footer {
+      background: #1e1e2f;
+      color: #ccc;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Annonz+</h1>
-    <p>Petites annonces au Burkina Faso</p>
+    <h1>Bienvenue sur AnnonzPlus</h1>
+    <p>La plateforme qui connecte vendeurs, acheteurs et services au Burkina Faso</p>
   </header>
 
-  <main>
-    <section id="form-section">
-      <h2>Publier une annonce</h2>
-      <form id="adForm">
-        <input type="text" placeholder="Nom du produit" id="title" required>
-        <input type="text" placeholder="Prix" id="price" required>
-        <input type="text" placeholder="Contact WhatsApp" id="contact" required>
-        <textarea placeholder="Description" id="desc" required></textarea>
-        <button type="submit">Publier</button>
-      </form>
-    </section>
+  <nav>
+    <a href="#">Accueil</a>
+    <a href="#">Fonctionnalités</a>
+    <a href="#">Contact</a>
+  </nav>
 
-    <section id="ads">
-      <h2>Dernières annonces</h2>
-      <div id="adList"></div>
-    </section>
-  </main>
+  <section>
+    <h2>Pourquoi choisir AnnonzPlus ?</h2>
+    <p>Publiez vos annonces, trouvez des partenaires et développez votre activité en toute simplicité.</p>
+    <a class="cta" href="#">Commencer maintenant</a>
+  </section>
 
-  <script src="script.js"></script>
+  <footer>
+    &copy; 2025 AnnonzPlus. Tous droits réservés.
+  </footer>
 </body>
 </html>
