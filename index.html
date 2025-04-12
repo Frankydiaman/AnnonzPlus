@@ -1,96 +1,70 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AnnonzPlus | Bienvenue</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f7f8fa;
-      color: #333;
-    }
-
-    header {
-      background-color: #1e1e2f;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    nav {
-      background-color: #28293d;
-      display: flex;
-      justify-content: center;
-      padding: 10px 0;
-    }
-
-    nav a {
-      color: #fff;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    section {
-      padding: 40px 20px;
-      text-align: center;
-    }
-
-    .cta {
-      margin-top: 20px;
-      display: inline-block;
-      background: #0b74de;
-      color: #fff;
-      padding: 12px 25px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 16px;
-    }
-
-    .cta:hover {
-      background: #095bb2;
-    }
-
-    footer {
-      background: #1e1e2f;
-      color: #ccc;
-      padding: 20px;
-      text-align: center;
-      font-size: 14px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TerraFund - AnnonzPlus</title>
 </head>
 <body>
-  <header>
-    <h1>Bienvenue sur AnnonzPlus</h1>
-    <p>La plateforme qui connecte vendeurs, acheteurs et services au Burkina Faso</p>
-  </header>
 
-  <nav>
-    <a href="#">Accueil</a>
-    <a href="#">Fonctionnalités</a>
-    <a href="#">Contact</a>
-  </nav>
+  <!-- Contenu visible de la page -->
+  <h1>Bienvenue sur TerraFund</h1>
 
-  <section>
-    <h2>Pourquoi choisir AnnonzPlus ?</h2>
-    <p>Publiez vos annonces, trouvez des partenaires et développez votre activité en toute simplicité.</p>
-    <a class="cta" href="#">Commencer maintenant</a>
-  </section>
+  <div>
+    <h2>Créer un compte / Se connecter</h2>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Mot de passe"><br>
+    <button onclick="signup()">Créer un compte</button>
+    <button onclick="login()">Connexion</button>
+  </div>
 
-  <footer>
-    &copy; 2025 AnnonzPlus. Tous droits réservés.
-  </footer>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+
+  <script>
+    // Config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvViJjco499G0cQfEyhY0m_mORSAmBH4M",
+      authDomain: "annonzplus.firebaseapp.com",
+      projectId: "annonzplus",
+      storageBucket: "annonzplus.firebasestorage.app",
+      messagingSenderId: "573875821045",
+      appId: "1:573875821045:web:61195685aef44f180ee8bc"
+    };
+
+    // Init Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Inscription
+    function signup() {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+
+      auth.createUserWithEmailAndPassword(email, pass)
+        .then((userCredential) => {
+          alert("Compte créé avec succès !");
+        })
+        .catch((error) => {
+          alert("Erreur : " + error.message);
+        });
+    }
+
+    // Connexion
+    function login() {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+
+      auth.signInWithEmailAndPassword(email, pass)
+        .then((userCredential) => {
+          alert("Connexion réussie !");
+        })
+        .catch((error) => {
+          alert("Erreur : " + error.message);
+        });
+    }
+  </script>
+
 </body>
 </html>
