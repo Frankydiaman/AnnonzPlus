@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Annonz+</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Annonz+</h1>
+    <p>Petites annonces au Burkina Faso</p>
+  </header>
+
+  <main>
+    <section id="form-section">
+      <h2>Publier une annonce</h2>
+      <form id="adForm">
+        <input type="text" placeholder="Nom du produit" id="title" required>
+        <input type="text" placeholder="Prix" id="price" required>
+        <input type="text" placeholder="Contact WhatsApp" id="contact" required>
+        <textarea placeholder="Description" id="desc" required></textarea>
+        <button type="submit">Publier</button>
+      </form>
+    </section>
+
+    <section id="ads">
+      <h2>Dernières annonces</h2>
+      <div id="adList"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
