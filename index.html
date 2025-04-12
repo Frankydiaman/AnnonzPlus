@@ -84,6 +84,60 @@
             padding: 15px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
+        
+        /* Styles pour l'upload d'image */
+        .upload-container {
+            margin: 15px 0;
+        }
+        
+        .upload-btn {
+            background: var(--accent);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #image-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px dashed var(--accent);
+            display: none;
+        }
+        
+        .product-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .placeholder-image {
+            height: 180px;
+            background: #f5f7fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+        }
+        
+        /* Animation de chargement */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body>
@@ -125,13 +179,22 @@
                 </button>
             </div>
             
-            <!-- Section Offres (masquée par défaut) -->
+            <!-- Section Offres -->
             <div id="offers-section">
                 <div class="offer-card">
                     <h3><i class="fas fa-plus-circle"></i> Nouvelle offre</h3>
                     <form id="offerForm">
                         <input type="text" id="offer-title" placeholder="Titre" required>
                         <input type="number" id="offer-price" placeholder="Prix (FCFA)" required>
+                        
+                        <div class="upload-container">
+                            <label class="upload-btn">
+                                <i class="fas fa-camera"></i> Choisir une image
+                                <input type="file" id="image-upload" accept="image/*" style="display:none;">
+                            </label>
+                            <img id="image-preview" class="image-preview">
+                        </div>
+                        
                         <input type="text" id="offer-contact" placeholder="WhatsApp (ex: 221701234567)" required>
                         <textarea id="offer-desc" placeholder="Description" rows="3" required></textarea>
                         <button type="submit" class="btn" style="width: 100%;">
@@ -141,7 +204,7 @@
                 </div>
             </div>
             
-            <!-- Section Produits (masquée par défaut) -->
+            <!-- Section Produits -->
             <div id="products-section" class="hidden">
                 <div class="product-card">
                     <h3><i class="fas fa-store-alt"></i> Marketplace</h3>
@@ -171,7 +234,7 @@
             orderBy
         } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-        // Configuration Firebase
+        // Configuration Firebase (vérifie les valeurs !)
         const firebaseConfig = {
             apiKey: "AIzaSyCNBk3z90lMmJ-Xped7MGFTTiZSF3u1kMM",
             authDomain: "megamarket-8f9e5.firebaseapp.com",
@@ -186,7 +249,123 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Gestion de l'interface
+        // Variables globales
+        let selectedFile = null;
+        const IMGBB_API_KEY = "0b2386aaacc431a5a5997a611c004190"; // Clé API ImgBB
+
+        // ==================== GESTION DES IMAGES ====================
+        document.getElementById('image-upload').addEventListener('change', (e) => {
+            selectedFile = e.target.files[0];
+            const preview = document.getElementById('image-preview');
+            
+            if (selectedFile) {
+                if (selectedFile.size > 5_000_000) { // 5MB max
+                    alert("⚠️ L'image est trop lourde (max 5MB)");
+                    return;
+                }
+                preview.src = URL.createObjectURL(selectedFile);
+                preview.style.display = 'block';
+            }
+        });
+
+        async function uploadToImgBB(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            try {
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) throw new Error("Erreur lors de l'upload");
+                const data = await response.json();
+                return data.data.url;
+            } catch (error) {
+                console.error("Erreur ImgBB:", error);
+                throw error;
+            }
+        }
+
+        // ==================== GESTION DU FORMULAIRE ====================
+        document.getElementById('offerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner spinner"></i> Publication...';
+
+            try {
+                const title = document.getElementById('offer-title').value;
+                const price = document.getElementById('offer-price').value;
+                const contact = document.getElementById('offer-contact').value;
+                const desc = document.getElementById('offer-desc').value;
+                
+                let imageUrl = '';
+                if (selectedFile) {
+                    imageUrl = await uploadToImgBB(selectedFile);
+                }
+
+                await addDoc(collection(db, "offers"), {
+                    title,
+                    price: Number(price),
+                    contact,
+                    desc,
+                    imageUrl,
+                    date: new Date(),
+                    userId: auth.currentUser.uid
+                });
+                
+                e.target.reset();
+                document.getElementById('image-preview').style.display = 'none';
+                selectedFile = null;
+                
+                alert("✅ Offre publiée !");
+                loadProducts();
+                
+            } catch (error) {
+                console.error("Erreur:", error);
+                alert(`❌ Erreur: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publier';
+            }
+        });
+
+        // ==================== AFFICHAGE DES PRODUITS ====================
+        async function loadProducts() {
+            const productsList = document.getElementById('products-list');
+            productsList.innerHTML = '<p>Chargement...</p>';
+            
+            try {
+                const q = query(collection(db, "offers"), orderBy("date", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                productsList.innerHTML = '';
+                
+                querySnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    productsList.innerHTML += `
+                        <div class="product-item">
+                            ${product.imageUrl ? 
+                              `<img src="${product.imageUrl}" alt="${product.title}" loading="lazy">` : 
+                              `<div class="placeholder-image"><i class="fas fa-image"></i></div>`
+                            }
+                            <h4>${product.title}</h4>
+                            <p><strong>${product.price} FCFA</strong></p>
+                            <a href="https://wa.me/${product.contact}" target="_blank" class="btn">
+                                <i class="fab fa-whatsapp"></i> Contacter
+                            </a>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                productsList.innerHTML = '<p>Erreur de chargement</p>';
+                console.error("Erreur Firestore:", error);
+            }
+        }
+
+        // ==================== GESTION DE L'INTERFACE ====================
         function showAuthScreen() {
             document.getElementById('auth-screen').classList.remove('hidden');
             document.getElementById('main-screen').classList.add('hidden');
@@ -195,12 +374,13 @@
         function showMainScreen() {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('main-screen').classList.remove('hidden');
-            showOffersSection(); // Afficher les offres par défaut
+            showOffersSection();
         }
 
         function showOffersSection() {
             document.getElementById('offers-section').classList.remove('hidden');
             document.getElementById('products-section').classList.add('hidden');
+            // Met à jour l'état actif des boutons
             document.getElementById('btnOffers').classList.add('active');
             document.getElementById('btnProducts').classList.remove('active');
         }
@@ -213,94 +393,45 @@
             loadProducts();
         }
 
-        // Gestion des offres
-        async function loadOffers() {
-            const q = query(collection(db, "offers"), orderBy("date", "desc"));
-            const querySnapshot = await getDocs(q);
-            
-            // (Cette fonction est appelée automatiquement après publication)
-        }
-
-        // Gestion des produits (Marketplace)
-        async function loadProducts() {
-            const productsList = document.getElementById('products-list');
-            productsList.innerHTML = '<p>Chargement en cours...</p>';
-            
-            const q = query(collection(db, "offers"), orderBy("date", "desc"));
-            const querySnapshot = await getDocs(q);
-            
-            productsList.innerHTML = '';
-            
-            if (querySnapshot.empty) {
-                productsList.innerHTML = '<p>Aucun produit disponible</p>';
-                return;
-            }
-
-            querySnapshot.forEach((doc) => {
-                const product = doc.data();
-                productsList.innerHTML += `
-                    <div class="product-item">
-                        <h4>${product.title}</h4>
-                        <p><strong>${product.price} FCFA</strong></p>
-                        <p>${product.desc}</p>
-                        <a href="https://wa.me/${product.contact}" target="_blank" class="btn" style="display: inline-block;">
-                            <i class="fab fa-whatsapp"></i> Contacter
-                        </a>
-                    </div>
-                `;
-            });
-        }
-
-        // Événements
+        // ==================== GESTION AUTHENTIFICATION ====================
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
             try {
+                const submitBtn = e.target.querySelector('button');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner spinner"></i> Connexion...';
+                
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
-                alert("Erreur: " + error.message);
-            }
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-            } catch (error) {
-                alert("Erreur: " + error.message);
-            }
-        });
-
-        document.getElementById('offerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const title = document.getElementById('offer-title').value;
-            const price = document.getElementById('offer-price').value;
-            const contact = document.getElementById('offer-contact').value;
-            const desc = document.getElementById('offer-desc').value;
-
-            try {
-                await addDoc(collection(db, "offers"), {
-                    title,
-                    price,
-                    contact,
-                    desc,
-                    date: new Date(),
-                    userId: auth.currentUser.uid
-                });
+                let message = "Erreur de connexion";
+                switch(error.code) {
+                    case "auth/invalid-email": message = "Email invalide"; break;
+                    case "auth/user-not-found": message = "Compte inexistant"; break;
+                    case "auth/wrong-password": message = "Mot de passe incorrect"; break;
+                    default: message = error.message;
+                }
+                alert(message);
                 
-                document.getElementById('offerForm').reset();
-                alert("Offre publiée avec succès !");
-            } catch (error) {
-                alert("Erreur: " + error.message);
+                const submitBtn = e.target.querySelector('button');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
             }
         });
 
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).catch(error => {
+                alert("Erreur de déconnexion: " + error.message);
+            });
+        });
+
+        // Navigation
         document.getElementById('btnOffers').addEventListener('click', showOffersSection);
         document.getElementById('btnProducts').addEventListener('click', showProductsSection);
 
-        // Écouteur d'authentification
+        // Surveille l'état de connexion
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 showMainScreen();
@@ -310,4 +441,4 @@
         });
     </script>
 </body>
-</html>
+</html>.
