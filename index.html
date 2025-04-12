@@ -3,26 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TerraFund - Connexion</title>
+  <title>Connexion - AnnonzPlus</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: white;
+      background-color: #f2f2f2;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
     }
 
-    .container {
-      background: rgba(255, 255, 255, 0.1);
+    .form-container {
+      background: white;
       padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       width: 100%;
+      max-width: 400px;
     }
 
     h2 {
@@ -32,44 +30,51 @@
 
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
-      border: none;
-      border-radius: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
 
     button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 10px;
-      background-color: #ffc107;
+      background-color: #28a745;
+      color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
-      color: #000;
-      font-weight: bold;
     }
 
     button:hover {
-      background-color: #e0a800;
+      background-color: #218838;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h2>Bienvenue sur TerraFund</h2>
-    <input type="email" id="email" placeholder="Adresse email">
-    <input type="password" id="password" placeholder="Mot de passe">
-    <button onclick="signup()">Créer un compte</button>
+  <div class="form-container">
+    <h2>Connexion / Inscription</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Mot de passe" required />
     <button onclick="login()">Se connecter</button>
+    <button onclick="signup()">S'inscrire</button>
+    <div id="error" class="error"></div>
   </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
 
-  <script>
+  <script type="module">
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyAvViJjco499G0cQfEyhY0m_mORSAmBH4M",
       authDomain: "annonzplus.firebaseapp.com",
@@ -82,29 +87,29 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    function signup() {
+    window.signup = function () {
       const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
+      const password = document.getElementById("password").value;
 
-      auth.createUserWithEmailAndPassword(email, pass)
+      auth.createUserWithEmailAndPassword(email, password)
         .then(() => {
-          alert("Compte créé avec succès !");
+          window.location.href = "dashboard.html";
         })
         .catch((error) => {
-          alert("Erreur : " + error.message);
+          document.getElementById("error").innerText = error.message;
         });
     }
 
-    function login() {
+    window.login = function () {
       const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
+      const password = document.getElementById("password").value;
 
-      auth.signInWithEmailAndPassword(email, pass)
+      auth.signInWithEmailAndPassword(email, password)
         .then(() => {
-          alert("Connexion réussie !");
+          window.location.href = "dashboard.html";
         })
         .catch((error) => {
-          alert("Erreur : " + error.message);
+          document.getElementById("error").innerText = error.message;
         });
     }
   </script>
