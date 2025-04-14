@@ -10,14 +10,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2E8B57;   /* Vert Baobab */
-            --secondary: #FFA500;  /* Orange marché */
-            --accent: #654321;    /* Terre */
-            --light: #F8F5F0;     /* Fond crème */
+            --primary: #2E8B57;
+            --secondary: #FFA500;
+            --accent: #654321;
+            --light: #F8F5F0;
             --text: #333333;
         }
 
-        /* Reset mobile */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
@@ -33,14 +32,12 @@
             overflow-x: hidden;
         }
 
-        /* App Container */
         #app {
             max-width: 100vw;
             min-height: 100vh;
-            padding-bottom: 60px; /* Espace pour la bottom bar */
+            padding-bottom: 60px;
         }
 
-        /* Bottom Navigation (remplace la navbar desktop) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -72,7 +69,6 @@
             color: var(--primary);
         }
 
-        /* Header */
         .app-header {
             background: var(--primary);
             color: white;
@@ -101,7 +97,6 @@
             font-size: 12px;
         }
 
-        /* Contenu */
         .page {
             display: none;
             padding: 15px;
@@ -117,7 +112,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Boutons */
         .btn {
             background: var(--secondary);
             color: var(--text);
@@ -129,7 +123,6 @@
             font-size: 1rem;
         }
 
-        /* Formulaire */
         input, textarea, select {
             width: 100%;
             padding: 12px;
@@ -139,7 +132,6 @@
             font-family: inherit;
         }
 
-        /* Produits */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -154,12 +146,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        /* Menu burger (pour plus de pages) */
-        .menu-toggle {
-            font-size: 1.4rem;
-        }
-
-        /* Notification mobile */
         .notification-badge {
             position: absolute;
             top: -5px;
@@ -175,7 +161,6 @@
             justify-content: center;
         }
 
-        /* NOUVEAUX STYLES POUR LE FORMULAIRE */
         .form-container {
             max-width: 800px;
             margin: 0 auto;
@@ -256,34 +241,96 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
         }
+
+        .admin-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+        }
+
+        .btn-approve {
+            background: #2E8B57;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .auth-form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .auth-toggle {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Header -->
         <header class="app-header">
             <div class="logo">
                 <span class="logo-icon">B</span>
                 <span>Baobuy</span>
             </div>
-            <div style="position: relative;">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge hidden">0</span>
+            <div id="auth-status" style="display:flex;align-items:center;">
+                <i class="fas fa-user"></i>
+                <span id="username-display" style="margin-left:8px;">Invité</span>
             </div>
         </header>
 
-        <!-- Pages -->
         <main>
             <div id="home" class="page active">
-                <h2>Bienvenue</h2>
+                <h2>Bienvenue <span id="home-username"></span></h2>
                 <p>Découvrez les dernières offres près de chez vous.</p>
+            </div>
+
+            <div id="auth" class="page">
+                <div class="auth-form" id="login-form">
+                    <h2>Connexion</h2>
+                    <input type="email" id="login-email" placeholder="Email" class="admin-input" required>
+                    <input type="password" id="login-password" placeholder="Mot de passe" class="admin-input" required>
+                    <button id="login-btn" class="btn-submit">Se connecter</button>
+                    <div class="auth-toggle" id="show-register">Créer un compte</div>
+                </div>
+                
+                <div class="auth-form hidden" id="register-form">
+                    <h2>Inscription</h2>
+                    <input type="text" id="register-name" placeholder="Nom complet" class="admin-input" required>
+                    <input type="email" id="register-email" placeholder="Email" class="admin-input" required>
+                    <input type="password" id="register-password" placeholder="Mot de passe" class="admin-input" required>
+                    <button id="register-btn" class="btn-submit">S'inscrire</button>
+                    <div class="auth-toggle" id="show-login">Déjà un compte ? Se connecter</div>
+                </div>
             </div>
 
             <div id="offers" class="page">
                 <div class="form-container">
                     <h2>Devenir vendeur sur Baobuy</h2>
                     <form id="seller-form">
-                        <!-- Infos perso -->
                         <div class="form-section">
                             <h3><i class="fas fa-user"></i> Vos informations</h3>
                             <input type="text" name="fullname" placeholder="Nom complet" required>
@@ -291,7 +338,6 @@
                             <input type="email" name="email" placeholder="Email (optionnel)">
                         </div>
 
-                        <!-- Infos produit -->
                         <div class="form-section">
                             <h3><i class="fas fa-cube"></i> Produit à vendre</h3>
                             <input type="text" name="product-name" placeholder="Nom du produit*" required>
@@ -305,7 +351,6 @@
                             <input type="number" name="price" placeholder="Prix (FCFA)*" min="0" required>
                         </div>
 
-                        <!-- Upload photo -->
                         <div class="form-section">
                             <h3><i class="fas fa-camera"></i> Photos</h3>
                             <div class="upload-zone">
@@ -329,9 +374,21 @@
             <div id="marketplace" class="page">
                 <!-- Liste des produits ici -->
             </div>
+            
+            <div id="admin-dashboard" class="page">
+                <div class="admin-container">
+                    <h2><i class="fas fa-lock"></i> Dashboard Admin</h2>
+                    <div id="admin-content">
+                        <div class="admin-section">
+                            <h3><i class="fas fa-check-circle"></i> Produits à valider</h3>
+                            <div id="products-to-approve" class="product-grid"></div>
+                        </div>
+                        <button id="logout-admin" class="btn-submit">Déconnexion</button>
+                    </div>
+                </div>
+            </div>
         </main>
 
-        <!-- Bottom Navigation -->
         <nav class="bottom-nav">
             <a href="#" class="nav-item active" data-page="home">
                 <i class="fas fa-home"></i>
@@ -345,113 +402,186 @@
                 <i class="fas fa-store"></i>
                 <span>Marché</span>
             </a>
-            <a href="#" class="nav-item" data-page="profile">
+            <a href="#" class="nav-item" id="profile-nav" data-page="auth">
                 <i class="fas fa-user"></i>
                 <span>Profil</span>
+            </a>
+            <a href="#" class="nav-item hidden" id="admin-nav" data-page="admin-dashboard">
+                <i class="fas fa-lock"></i>
+                <span>Admin</span>
             </a>
         </nav>
     </div>
 
     <script type="module">
-        // Gestion de l'upload d'images
-        const fileInput = document.querySelector('input[name="images"]');
-        const previewGrid = document.getElementById('image-preview');
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        import { 
+            getFirestore,
+            collection,
+            doc,
+            setDoc,
+            getDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
-        fileInput?.addEventListener('change', (e) => {
-            previewGrid.innerHTML = '';
-            const files = Array.from(e.target.files).slice(0, 3); // Limite à 3 images
-            
-            files.forEach(file => {
-                if (!file.type.match('image.*')) return;
-                
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    previewGrid.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            });
+        const firebaseConfig = {
+            apiKey: "AIzaSyAu9BtHHyfci5eeOi2v5fNTPZB5uo3nzHA",
+            authDomain: "baobuy-d0562.firebaseapp.com",
+            projectId: "baobuy-d0562",
+            storageBucket: "baobuy-d0562.appspot.com",
+            messagingSenderId: "651832187016",
+            appId: "1:651832187016:web:309833e53fecc4d7dde73d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Éléments UI
+        const usernameDisplay = document.getElementById('username-display');
+        const homeUsername = document.getElementById('home-username');
+        const profileNav = document.getElementById('profile-nav');
+        const adminNav = document.getElementById('admin-nav');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const showRegister = document.getElementById('show-register');
+        const showLogin = document.getElementById('show-login');
+
+        // Gestion utilisateur
+        let currentUser = null;
+        let userData = null;
+
+        // Événements
+        showRegister.addEventListener('click', () => {
+            loginForm.classList.add('hidden');
+            registerForm.classList.remove('hidden');
         });
 
-        // Soumission du formulaire
-        document.getElementById('seller-form')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const productData = {
-                seller: {
-                    name: formData.get('fullname'),
-                    phone: formData.get('phone'),
-                    email: formData.get('email')
-                },
-                product: {
-                    name: formData.get('product-name'),
-                    category: formData.get('category'),
-                    description: formData.get('description'),
-                    price: formData.get('price'),
-                    images: []
-                },
-                date: new Date().toISOString()
-            };
-
-            // Gestion des images (stockage temporaire)
-            const files = fileInput.files;
-            for (let i = 0; i < Math.min(files.length, 3); i++) {
-                const file = files[i];
-                productData.product.images.push(await toBase64(file));
-            }
-
-            // Stockage dans localStorage (en attendant backend)
-            saveProduct(productData);
-            
-            // Feedback utilisateur
-            alert('Offre publiée avec succès ! Nous la validerons sous 24h.');
-            e.target.reset();
-            previewGrid.innerHTML = '';
+        showLogin.addEventListener('click', () => {
+            registerForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
         });
 
-        // Helper functions
-        function toBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        }
+        document.getElementById('login-btn').addEventListener('click', handleLogin);
+        document.getElementById('register-btn').addEventListener('click', handleRegister);
+        document.getElementById('logout-admin')?.addEventListener('click', handleLogout);
 
-        function saveProduct(product) {
-            const products = JSON.parse(localStorage.getItem('baobuy_products')) || [];
-            products.push(product);
-            localStorage.setItem('baobuy_products', JSON.stringify(products));
-        }
-
-        // Gestion de la navigation
+        // Navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
-                document.querySelectorAll('.nav-item').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                const pageId = this.getAttribute('data-page');
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                });
-                document.getElementById(pageId).classList.add('active');
+                switchPage(this.getAttribute('data-page'));
             });
         });
 
-        // Optimisation du clavier mobile
-        document.querySelectorAll('input, textarea').forEach(input => {
-            input.addEventListener('focus', () => {
-                setTimeout(() => {
-                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 300);
-            });
+        // Observateur d'état d'authentification
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                await loadUserData(user.uid);
+            } else {
+                currentUser = null;
+                userData = null;
+                updateUI();
+                switchPage('home');
+            }
         });
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                loginForm.reset();
+            } catch (error) {
+                alert("Erreur de connexion: " + error.message);
+            }
+        }
+
+        async function handleRegister() {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            
+            try {
+                const { user } = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // Créer le document utilisateur dans Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                    isAdmin: false,
+                    createdAt: serverTimestamp()
+                });
+                
+                registerForm.reset();
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } catch (error) {
+                alert("Erreur d'inscription: " + error.message);
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                alert("Erreur de déconnexion: " + error.message);
+            }
+        }
+
+        async function loadUserData(uid) {
+            const docSnap = await getDoc(doc(db, "users", uid));
+            
+            if (docSnap.exists()) {
+                userData = docSnap.data();
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            if (currentUser && userData) {
+                usernameDisplay.textContent = userData.name || currentUser.email;
+                homeUsername.textContent = userData.name || currentUser.email;
+                adminNav.classList.toggle('hidden', !userData.isAdmin);
+                
+                // Mettre à jour l'onglet actif
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-page') === 'home') {
+                        item.classList.add('active');
+                    }
+                });
+            } else {
+                usernameDisplay.textContent = 'Invité';
+                homeUsername.textContent = '';
+                adminNav.classList.add('hidden');
+            }
+        }
+
+        function switchPage(pageId) {
+            // Mettre à jour la navigation
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+                if (nav.getAttribute('data-page') === pageId) {
+                    nav.classList.add('active');
+                }
+            });
+            
+            // Afficher la bonne page
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
     </script>
 </body>
 </html>
